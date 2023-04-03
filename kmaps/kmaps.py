@@ -53,11 +53,10 @@ def euclidean_dist(first_coord, second_coord):
     """
     if len(first_coord) != 2:
         print('1')
-        break
-    if len(second_coord) != 2:
+    elif len(second_coord) != 2:
         print('2')
-        break
-    x_diff = first_coord[0] - second_coord[0]
-    y_diff = first_coord[1] - second_coord[1]
-    dist = np.sqrt((x_diff) ** 2 + (y_diff) ** 2)
-    return dist
+    else:
+        x_diff = first_coord[0] - second_coord[0]
+        y_diff = first_coord[1] - second_coord[1]
+        dist = np.sqrt((x_diff) ** 2 + (y_diff) ** 2)
+        return dist
