@@ -48,5 +48,7 @@ nav:
     - FAQ: faq.md
     - Changelog: changelog.md
     - Report Issues: https://github.com/ChangwhaOh/kmaps/issues
+    - Examples:
+          - Introduction: examples/00_introduction.ipynb
     - API Reference:
           - kmaps module: kmaps.md
