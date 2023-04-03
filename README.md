@@ -14,7 +14,7 @@
 
 ## Features
 
--   TODO
+-   kmaps is in development.
 
 ## Credits
 
