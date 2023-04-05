@@ -9,6 +9,7 @@ import pandas as pd
 import geopandas as gpd
 
 from shapely.geometry import Polygon
+from random import sample
 
 
 class Map(ipyleaflet.Map): # inherited from ipyleaflet.Map
