@@ -21,8 +21,8 @@ class Map(ipyleaflet.Map): # inherited from ipyleaflet.Map
         """_summary_
 
         Args:
-            center (_type_): _description_
-            zoom (_type_): _description_
+            center (list): _description_
+            zoom (int): _description_
         """        
         if 'scroll_wheel_zoom' not in kwargs:
             kwargs['scroll_wheel_zoom'] = True
@@ -75,8 +75,8 @@ class Map(ipyleaflet.Map): # inherited from ipyleaflet.Map
         """_summary_
 
         Args:
-            url (_type_): _description_
-            name (_type_): _description_
+            url (str): _description_
+            name (str): _description_
             attribution (str, optional): _description_. Defaults to ''.
         """        
         tile_layer = ipyleaflet.TileLayer(
@@ -92,7 +92,7 @@ class Map(ipyleaflet.Map): # inherited from ipyleaflet.Map
         """_summary_
 
         Args:
-            basemap (_type_): _description_
+            basemap (str): _description_
 
         Raises:
             ValueError: _description_
@@ -119,7 +119,7 @@ class Map(ipyleaflet.Map): # inherited from ipyleaflet.Map
         """_summary_
 
         Args:
-            data (_type_): _description_
+            data (str): _description_
             name (str, optional): _description_. Defaults to 'GeoJSON'.
         """        
         if isinstance(data, str):
@@ -135,7 +135,7 @@ class Map(ipyleaflet.Map): # inherited from ipyleaflet.Map
         """_summary_
 
         Args:
-            data (_type_): _description_
+            data (str): _description_
             name (str, optional): _description_. Defaults to 'ShapeFile'.
         """        
         import geopandas as gpd
