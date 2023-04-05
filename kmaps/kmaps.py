@@ -4,10 +4,6 @@ import random
 import string
 import ipyleaflet
 
-import numpy as np
-
-
-
 class Map(ipyleaflet.Map): # inherited from ipyleaflet.Map
     """Class 'Map'
 
