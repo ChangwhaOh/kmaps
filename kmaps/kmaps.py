@@ -12,11 +12,11 @@ class Map(ipyleaflet.Map):
         ipyleaflet (_type_): _description_
     """
     def __init__(self, center = [37.5, 127], zoom = 8, **kwargs):
-        """_summary_
+        """Create a Map.
 
         Args:
-            center (list): _description_
-            zoom (int): _description_
+            center (list, optional): A coordinate representing the center of the map. Defaults to `[37.5, 127]`
+            zoom (int, optional): Zoom level. Defaults to 8
         """        
         if 'scroll_wheel_zoom' not in kwargs:
             kwargs['scroll_wheel_zoom'] = True
@@ -33,10 +33,10 @@ class Map(ipyleaflet.Map):
 
 
     def add_search_control(self, position = 'topleft', **kwargs):
-        """_summary_
+        """Add a search control panel to the map.
 
         Args:
-            position (str, optional): _description_. Defaults to 'topleft'.
+            position (str, optional): The location of the search control panel. Defaults to 'topleft'.
         """        
         if 'url' not in kwargs:
             kwargs['url'] = 'https://nominatim.openstreetmap.org/search?format=json&q={s}'
@@ -46,32 +46,32 @@ class Map(ipyleaflet.Map):
 
 
     def add_draw_control(self, position = 'topleft', **kwargs):
-        """_summary_
+        """Add a draw control panel to the map.
 
         Args:
-            position (str, optional): _description_. Defaults to 'topleft'.
+            position (str, optional): The location of the draw control panel. Defaults to 'topleft'.
         """        
         draw_control = ipyleaflet.DrawControl(position = position, **kwargs)
         self.add_control(draw_control)
 
 
     def add_layers_control(self, position = 'topright', **kwargs):
-        """_summary_
+        """Add a layers control panel to the map.
 
         Args:
-            position (str, optional): _description_. Defaults to 'topright'.
+            position (str, optional): The location of the layers control panel. Defaults to 'topright'.
         """        
         layers_control = ipyleaflet.LayersControl(position = position, **kwargs)
         self.add_control(layers_control)
 
 
     def add_tile_layer(self, url, name, attribution = '', **kwargs):
-        """_summary_
+        """Add a tile layer to the map.
 
         Args:
-            url (str): _description_
-            name (str): _description_
-            attribution (str, optional): _description_. Defaults to ''.
+            url (str): xyz url of the tile layer.
+            name (str): A name of the layer that would be displayed on the map.
+            attribution (str, optional): A name of the attribution. Defaults to ''.
         """        
         tile_layer = ipyleaflet.TileLayer(
             url = url,
@@ -83,13 +83,13 @@ class Map(ipyleaflet.Map):
     
 
     def add_basemap(self, basemap, **kwargs):
-        """_summary_
+        """Add a base map to the map.
 
         Args:
-            basemap (str): _description_
+            basemap (str): xyz url of the base map.
 
         Raises:
-            ValueError: _description_
+            ValueError: Error message will be raised if the url is not available.
         """
         import xyzservices.providers as xyz
 
@@ -110,11 +110,11 @@ class Map(ipyleaflet.Map):
 
 
     def add_geojson(self, data, name = 'GeoJSON', **kwargs):
-        """_summary_
+        """Add a geojson file to the map.
 
         Args:
-            data (str): _description_
-            name (str, optional): _description_. Defaults to 'GeoJSON'.
+            data (str): A name of the geojson file.
+            name (str, optional): A layer name of the geojson file to be displayed on the map. Defaults to 'GeoJSON'.
         """        
         if isinstance(data, str):
             import json
@@ -126,11 +126,11 @@ class Map(ipyleaflet.Map):
 
 
     def add_shp(self, data, name = 'ShapeFile', **kwargs):
-        """_summary_
+        """Add a shape file to the map.
 
         Args:
-            data (str): _description_
-            name (str, optional): _description_. Defaults to 'ShapeFile'.
+            data (str): A name of the shape file.
+            name (str, optional): A layer name of the shape file to be displayed on the map. Defaults to 'ShapeFile'.
         """        
         import geopandas as gpd
         gdf = gpd.read_file(data)
@@ -143,13 +143,13 @@ def generate_random_string(length, upper = False, digit = False, punc = False):
     """Generates a random string of a given length.
 
     Args:
-        length (int): _description_
-        upper (bool, optional): _description_. Defaults to False.
-        digit (bool, optional): _description_. Defaults to False.
-        punc (bool, optional): _description_. Defaults to False.
+        length (int): A length of the string.
+        upper (bool, optional): Whether you would like to contain upper case alphabets in your string pool or not. Defaults to False.
+        digit (bool, optional): Whether you would like to contain digits in your string pool or not. Defaults to False.
+        punc (bool, optional): Whether you would like to contain punctuations in your string pool or not. Defaults to False.
 
     Returns:
-        str: _description_
+        str: Generated random string.
     """
     chars = string.ascii_lowercase
     if upper:
@@ -163,14 +163,14 @@ def generate_random_string(length, upper = False, digit = False, punc = False):
     return result_str
 
 
-def generate_lucky_number(length = 1):
-    """_summary_
+def generate_lucky_number(length = 2):
+    """Generates a random number of a given length.
 
     Args:
-        length (int, optional): _description_. Defaults to 1.
+        length (int, optional): A length of the number. Defaults to 2.
 
     Returns:
-        int: _description_
+        int: Generated random number.
     """    
     result_str = ''.join(random.choice(string.digits) for i in range(length))
     result_str = int(result_str)
@@ -178,14 +178,14 @@ def generate_lucky_number(length = 1):
 
 
 def euclidean_dist(first_coord, second_coord):
-    """_summary_
+    """Calculates an Euclidean distance between two coordinates.
 
     Args:
-        first_coord (list): _description_
-        second_coord (list): _description_
+        first_coord (list): A coordinate of the first point. Should have 2 length. 
+        second_coord (list): A coordinate of the second point. Should have 2 length. 
 
     Returns:
-        _type_: _description_
+        int: Calculated Euclidean distance.
     """
     if len(first_coord) != 2:
         print('1')
