@@ -175,3 +175,24 @@ def generate_lucky_number(length = 1):
     result_str = ''.join(random.choice(string.digits) for i in range(length))
     result_str = int(result_str)
     return result_str
+
+
+def euclidean_dist(first_coord, second_coord):
+    """_summary_
+
+    Args:
+        first_coord (list): _description_
+        second_coord (list): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    if len(first_coord) != 2:
+        print('1')
+    elif len(second_coord) != 2:
+        print('2')
+    else:
+        x_diff = first_coord[0] - second_coord[0]
+        y_diff = first_coord[1] - second_coord[1]
+        dist = ((x_diff) ** 2 + (y_diff) ** 2) ** (1 / 2)
+        return dist
