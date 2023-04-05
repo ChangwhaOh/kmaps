@@ -125,19 +125,6 @@ class Map(ipyleaflet.Map):
         self.add_layer(geojson)
 
 
-    def add_shp(self, data, name = 'ShapeFile', **kwargs):
-        """Add a shape file to the map.
-
-        Args:
-            data (str): A name of the shape file.
-            name (str, optional): A layer name of the shape file to be displayed on the map. Defaults to 'ShapeFile'.
-        """        
-        import geopandas as gpd
-        gdf = gpd.read_file(data)
-        geojson = gdf.__geo_interface__
-        self.add_layer(geojson, name = name, **kwargs)
-
-
 
 def generate_random_string(length, upper = False, digit = False, punc = False):
     """Generates a random string of a given length.
