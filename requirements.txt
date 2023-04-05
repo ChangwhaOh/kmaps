@@ -1,3 +1,7 @@
 numpy
+random
 folium
 ipyleaflet
+pandas
+geopandas
+shapely
