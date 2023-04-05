@@ -1,3 +1,2 @@
-random
 folium
 ipyleaflet
