@@ -5,11 +5,7 @@ import string
 import ipyleaflet
 
 import numpy as np
-import pandas as pd
-import geopandas as gpd
 
-from shapely.geometry import Polygon
-from random import sample
 
 
 class Map(ipyleaflet.Map): # inherited from ipyleaflet.Map
@@ -166,26 +162,3 @@ def euclidean_dist(first_coord, second_coord):
         dist = np.sqrt((x_diff) ** 2 + (y_diff) ** 2)
         return dist
 
-
-def random_points_generator(Xls, Yls):
-    """_summary_
-
-    Args:
-        Xls (list): _description_
-        Yls (list): _description_
-
-    Returns:
-        _type_: _description_
-    """
-    XCoord = list(Xls)
-    YCoord = list(Yls)
-
-    IDls = []
-    for i in range(0, len(Xls)):
-        IDls.append(i + 1)
-
-    df_dict = {'ID': IDls, 'XCoord': XCoord, 'YCoord': YCoord}
-    df = pd.DataFrame(df_dict)
-    df = gpd.GeoDataFrame(df, geometry = gpd.points_from_xy(XCoord, YCoord))
-
-    return df
