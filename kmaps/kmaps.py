@@ -124,6 +124,50 @@ class Map(ipyleaflet.Map):
         geojson = ipyleaflet.GeoJSON(data = data, name = name, **kwargs)
         self.add_layer(geojson)
 
+    def add_raster(self, url, name = 'Raster', fit_bounds = True, **kwargs):
+        """_summary_
+
+        Args:
+            url (str): _description_
+            name (str, optional): _description_. Defaults to 'Raster'.
+            fit_bounds (bool, optional): _description_. Defaults to True.
+        """        
+        import httpx
+
+        titiler_endpoint = 'https://titiler.xyz'
+        
+        # get a bbox
+        r = httpx.get(
+            f"{titiler_endpoint}/cog/info",
+            params = {
+                "url": url,
+            }
+        ).json()
+
+        bounds = r["bounds"]
+
+        # get a url
+        r = httpx.get(
+            f"{titiler_endpoint}/cog/tilejson.json",
+            params = {
+                "url": url,
+            }
+        ).json()
+
+        tile = r['tiles'][0]
+
+        self.add_tile_layer(url = tile, name = name, **kwargs)
+
+        if fit_bounds:
+            bbox = [[bounds[1], bounds[0]], [bounds[3], bounds[2]]]
+            self.fit_bounds(bbox)
+        
+    def add_local_raster(self, filename, name = 'local raster', **kwargs):
+        try:
+            import localtileserver
+        except ImportError:
+            raise ImportError('')
+        
 
 
 def generate_random_string(length, upper = False, digit = False, punc = False):
