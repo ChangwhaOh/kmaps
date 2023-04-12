@@ -123,6 +123,18 @@ class Map(ipyleaflet.Map):
 
         geojson = ipyleaflet.GeoJSON(data = data, name = name, **kwargs)
         self.add_layer(geojson)
+    
+    def add_shp(self, data, name = 'Shapefile', **kwargs):
+        """Add a ESRI shape file to the map.
+
+        Args:
+            data (str): A name of the shape file.
+            name (str, optional): A layer name of the shape file to be displayed on the map. Defaults to 'Shapefile'.
+        """
+        import geopandas as gpd
+        gdf = gpd.read_file(data)
+        geojson = gdf.__geo_interface__
+        self.add_geojson(geojson, name = name, **kwargs)
 
     def add_raster(self, url, name = 'Raster', fit_bounds = True, **kwargs):
         """_summary_
@@ -167,6 +179,45 @@ class Map(ipyleaflet.Map):
             import localtileserver
         except ImportError:
             raise ImportError('')
+    
+
+
+    def add_vector(
+        self,
+        filename,
+        layer_name = 'Vector',
+        **kwargs,
+    ):
+        import os
+        if not filename.startswith('http'):
+            filename = os.path.abspath(filename)
+        else:
+            filename = github_raw_url(filename)
+        ext = os.path.splitext(filename)[1].lower()
+        if ext == '.shp':
+            self.add_shp(
+                filename,
+                layer_name
+            )
+        elif ext in ['.json', '.geojson']:
+            self.add_geojson(
+                filename,
+                layer_name
+            )
+        else:
+            geojson = vector_to_geojson(
+                filename,
+                bbox = bbox,
+                mask = mask,
+                rows = rows,
+                epsg = '4326',
+                **kwargs,
+            )
+
+            self.add_geojson(
+                geojson,
+                layer_name
+            )
         
 
 

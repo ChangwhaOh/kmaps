@@ -50,5 +50,6 @@ nav:
     - Report Issues: https://github.com/ChangwhaOh/kmaps/issues
     - Examples:
           - Introduction: examples/00_introduction.ipynb
+          - Folium: examples/02_folium.ipynb
     - API Reference:
           - kmaps module: kmaps.md
