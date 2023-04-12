@@ -15,8 +15,8 @@ class Map(folium.Map):
         """Create a Map.
 
         Args:
-            center (list, optional): A coordinate representing the center of the map. Defaults to `[37.5, 127]`
-            zoom (int, optional): Zoom level. Defaults to 8
+            location (list, optional): A coordinate representing the center of the map. Defaults to `[37.5, 127]`
+            zoom_start (int, optional): Zoom level. Defaults to 8
         """            
         if 'scroll_wheel_zoom' not in kwargs:
             kwargs['scroll_wheel_zoom'] = True
