@@ -53,3 +53,4 @@ nav:
           - Folium: examples/02_folium.ipynb
     - API Reference:
           - kmaps module: kmaps.md
+          - folium module: folium.md

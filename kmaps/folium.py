@@ -6,8 +6,18 @@ import folium
 
 
 class Map(folium.Map):
+    """Class 'Map'.
 
-    def __init__(self, location = [37.5, 127], zoom_start = 8, **kwargs):     
+    Args:
+        folium (_type_): Map object from folium.
+    """
+    def __init__(self, location = [37.5, 127], zoom_start = 8, **kwargs): 
+        """Create a Map.
+
+        Args:
+            center (list, optional): A coordinate representing the center of the map. Defaults to `[37.5, 127]`
+            zoom (int, optional): Zoom level. Defaults to 8
+        """            
         if 'scroll_wheel_zoom' not in kwargs:
             kwargs['scroll_wheel_zoom'] = True
         super().__init__(location = location, zoom_start = zoom_start, **kwargs) # inherited from the parent, in this case, ipyleaflet
@@ -15,9 +25,6 @@ class Map(folium.Map):
 
     def add_layers_control(self, **kwargs):
         """Add a layers control panel to the map.
-
-        Args:
-            position (str, optional): The location of the layers control panel. Defaults to 'topright'.
         """        
         folium.LayerControl(**kwargs).add_to(self)
 
