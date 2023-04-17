@@ -50,7 +50,9 @@ nav:
     - Report Issues: https://github.com/ChangwhaOh/kmaps/issues
     - Examples:
           - Introduction: examples/00_introduction.ipynb
-          - Folmaps: examples/02_folmaps.ipynb
+          - Folmaps: examples/01_folmaps.ipynb
+          - Raster: examples/02_raster.ipynb
+          - Image: examples/03_iamge.ipynb
     - API Reference:
           - kmaps module: kmaps.md
           - folmaps module: folmaps.md

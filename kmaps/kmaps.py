@@ -137,12 +137,12 @@ class Map(ipyleaflet.Map):
         self.add_geojson(geojson, name = name, **kwargs)
 
     def add_raster(self, url, name = 'Raster', fit_bounds = True, **kwargs):
-        """_summary_
+        """Add a raster file to the map.
 
         Args:
-            url (str): _description_
-            name (str, optional): _description_. Defaults to 'Raster'.
-            fit_bounds (bool, optional): _description_. Defaults to True.
+            url (str): An url of the raster image.
+            name (str, optional): A layer name of the raster to be displayed on the map. Defaults to 'Raster'.
+            fit_bounds (bool, optional): Move a display of the map to the raster image location. Defaults to True.
         """        
         import httpx
 
@@ -219,8 +219,21 @@ class Map(ipyleaflet.Map):
                 layer_name
             )
     
-    def add_image(url, width, height, position):
-        print('')
+    def add_image(self, url, width, height, position = 'bottomright'):
+        """Add an image file to the map.
+
+        Args:
+            url (str): An url of the image.
+            width (float): width of the image to be displayed
+            height (float): height of the image to be displayed
+            position (_type_, optional): Position argument. Defaults to 'bottomright'.
+        """        
+        from ipyleaflet import WidgetControl
+        import ipywidgets as widgets
+
+        widget = widgets.HTML(value = f'<img src="{url}" width = "{width}" height = "{height}">')
+        control = WidgetControl(widget = widget, position = position)
+        self.add(control)
         
 
 
