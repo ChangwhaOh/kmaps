@@ -220,7 +220,7 @@ class Map(ipyleaflet.Map):
             )
     
     def add_image(url, width, height, position):
-        
+        print('')
         
 
 
