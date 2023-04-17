@@ -49,3 +49,21 @@ class Map(folium.Map):
         gdf = gpd.read_file(data)
         geojson = gdf.__geo_interface__
         self.add_geojson(geojson, name = name, **kwargs)
+    
+
+    def add_tile_layer(self, url, name, attr = 'Tile', **kwargs):
+        """Add a tile layer to the map.
+
+        Args:
+            url (str): xyz url of the tile layer.
+            name (str): A name of the layer that would be displayed on the map.
+            attr (str, optional): A name of the attribution. Defaults to 'Tile'.
+        """        
+        tile_layer = folium.TileLayer(
+            tiles = url,
+            name = name,
+            attr = attr,
+            **kwargs
+        )
+
+        self.add_child(tile_layer)

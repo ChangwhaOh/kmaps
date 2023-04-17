@@ -1,0 +1,3 @@
+# folmaps module
+
+::: kmaps.folmaps

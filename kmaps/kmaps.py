@@ -185,7 +185,7 @@ class Map(ipyleaflet.Map):
     def add_vector(
         self,
         filename,
-        layer_name = 'Vector',
+        layer_name = 'Vector data',
         **kwargs,
     ):
         import os
@@ -218,6 +218,9 @@ class Map(ipyleaflet.Map):
                 geojson,
                 layer_name
             )
+    
+    def add_image(url, width, height, position):
+        
         
 
 

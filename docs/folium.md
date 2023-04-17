@@ -1,3 +1,0 @@
-# folium module
-
-::: kmaps.folium
