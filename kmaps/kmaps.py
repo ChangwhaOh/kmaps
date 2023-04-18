@@ -285,12 +285,15 @@ def euclidean_dist(first_coord, second_coord):
     Returns:
         int: Calculated Euclidean distance.
     """
-    if len(first_coord) != 2:
-        print('1')
-    elif len(second_coord) != 2:
-        print('2')
-    else:
-        x_diff = first_coord[0] - second_coord[0]
-        y_diff = first_coord[1] - second_coord[1]
-        dist = ((x_diff) ** 2 + (y_diff) ** 2) ** (1 / 2)
-        return dist
+    import math
+    for coord in [first_coord, second_coord]:
+        if not isinstance(coord, (list, tuple)) or len(coord) != 2:
+            raise ValueError('The coordinates must be lists or tuples of length 2.')
+        for element in coord:
+            if not isinstance(element, (int, float)):
+                raise ValueError('The elements of the coordinates must be integers or floats.')
+                
+    x_diff = first_coord[0] - second_coord[0]
+    y_diff = first_coord[1] - second_coord[1]
+    dist = math.sqrt(x_diff ** 2 + y_diff ** 2)
+    return dist
