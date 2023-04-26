@@ -53,6 +53,7 @@ nav:
           - Folmaps: examples/01_folmaps.ipynb
           - Raster: examples/02_raster.ipynb
           - Image: examples/03_image.ipynb
+          - Dropdown: examples/04_dropdown.ipynb
     - API Reference:
           - kmaps module: kmaps.md
           - folmaps module: folmaps.md
