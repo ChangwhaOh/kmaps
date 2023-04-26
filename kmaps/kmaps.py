@@ -36,9 +36,12 @@ class Map(ipyleaflet.Map):
     
     #['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California']
 
-    def add_states_dropdown(self, **kwargs):
-        """Add a dropdown widget to move to each state to the map.
-        """        
+    def add_states_dropdown(self, position = 'bottomright', **kwargs):
+        """Add a dropdown widget to move to selected state to the map.
+
+        Args:
+            position (str, optional): Position of the widget. Defaults to 'bottomright'.
+        """            
         states_list = [('Initial Location', self.center), 
             ('Alabama', [32.78, -86.83]), ('Alaska', [64.07, -152.28]), 
             ('Arizona', [34.27, -111.66]), ('Arkansas', [34.89, -92.44]),
@@ -73,10 +76,33 @@ class Map(ipyleaflet.Map):
             style = {'description_width': 'initial'}
         )
 
-        states_control = ipyleaflet.WidgetControl(widget = states_dropdown, position = 'bottomright')
+        states_control = ipyleaflet.WidgetControl(widget = states_dropdown, position = position)
         self.add(states_control)
         
         widgets.link((self, 'center'), (states_dropdown, 'value'))
+
+
+    def add_base_dropdown(self, position = 'bottomright', **kwargs):
+        """Add a dropdown widget to select a basemap.
+
+        Args:
+            position (str, optional): Position of the widget. Defaults to 'bottomright'.
+        """        
+        base_dropdown = widgets.Dropdown(
+            options = ['Satellite', 'Roadmap'],
+            value = None,
+            description = 'Basemap',
+        )
+
+        basemap_ctrl = ipyleaflet.WidgetControl(widget = base_dropdown, position = position)
+
+        def change_basemap(change):
+            if change['new']:
+                self.add_basemap(base_dropdown.value)
+        
+        base_dropdown.observe(change_basemap, 'value')
+
+        self.add(basemap_ctrl)
 
 
 
