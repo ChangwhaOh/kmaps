@@ -370,7 +370,7 @@ class Map(ipyleaflet.Map):
                 if not os.path.exists(out_dir):
                     os.makedirs(out_dir)
             else:
-                outfile = os.path.abspath(random_string() + ".html")
+                outfile = os.path.abspath(generate_random_string(3) + ".html")
                 save = False
 
             '''
