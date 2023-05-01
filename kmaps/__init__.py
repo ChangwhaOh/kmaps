@@ -2,6 +2,6 @@
 
 __author__ = """Changwha Oh"""
 __email__ = 'coh4@vols.utk.edu'
-__version__ = '0.0.10'
+__version__ = '0.0.11'
 
 from .kmaps import *
