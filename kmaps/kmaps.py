@@ -4,6 +4,7 @@ import random
 import string
 import ipyleaflet
 import ipywidgets as widgets
+import os
 
 
 class Map(ipyleaflet.Map):
@@ -372,11 +373,13 @@ class Map(ipyleaflet.Map):
                 outfile = os.path.abspath(random_string() + ".html")
                 save = False
 
+            '''
             if add_layer_control and self.layer_control is None:
                 layer_control = ipyleaflet.LayersControl(position="topright")
                 self.layer_control = layer_control
                 self.add(layer_control)
-
+            '''
+            
             before_width = self.layout.width
             before_height = self.layout.height
 
