@@ -310,8 +310,9 @@ class Map(ipyleaflet.Map):
         self.add(control)
 
 
-####### just copied from leafmap
+
     def to_streamlit(self, width=None, height=600, scrolling=False, **kwargs):
+        ####### just copied from leafmap
         """Renders map figure in a Streamlit app.
         Args:
             width (int, optional): Width of the map. Defaults to None.
@@ -338,7 +339,7 @@ class Map(ipyleaflet.Map):
 
         except Exception as e:
             raise Exception(e)
-#######     
+    
 
 
 def generate_random_string(length, upper = False, digit = False, punc = False):
