@@ -67,3 +67,31 @@ class Map(folium.Map):
         )
 
         self.add_child(tile_layer)
+
+
+    def add_basemap(self, basemap, **kwargs):
+        """Add a base map to the map.
+
+        Args:
+            basemap (str): xyz url of the base map.
+
+        Raises:
+            ValueError: Error message will be raised if the url is not available.
+        """
+        
+        import xyzservices.providers as xyz
+
+        if basemap.lower() == 'roadmap':
+            url = 'http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}'
+            self.add_tile_layer(url, name = basemap, **kwargs)
+        elif basemap.lower() == 'satellite':
+            url = 'http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}'
+            self.add_tile_layer(url, name = basemap, **kwargs)
+        else:
+            try:
+                basemap = eval(f'xyz.{basemap}')
+                url = basemap.build_url()
+                attribution = basemap.attribution
+                self.add_tile_layer(url, name = basemap, attr = attribution, **kwargs)
+            except:
+                raise ValueError(f'{basemap} is not found')

@@ -25,7 +25,7 @@ plugins:
           include_source: True
         #   ignore_h1_titles: True
         #   execute: True
-        #   execute_ignore: "*.ipynb"
+        #   execute_ignore: "*.ipynb"  ### ['filepath/filename.ipynb', ''] to skip running particular files
           
 markdown_extensions:
     - attr_list

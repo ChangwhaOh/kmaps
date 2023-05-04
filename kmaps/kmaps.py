@@ -166,6 +166,7 @@ class Map(ipyleaflet.Map):
         Raises:
             ValueError: Error message will be raised if the url is not available.
         """
+        
         import xyzservices.providers as xyz
 
         if basemap.lower() == 'roadmap':
@@ -348,7 +349,6 @@ class Map(ipyleaflet.Map):
         title="My Map",
         width="100%",
         height="880px",
-        add_layer_control=True,
         **kwargs,
     ):
         ####### just copied from leafmap
