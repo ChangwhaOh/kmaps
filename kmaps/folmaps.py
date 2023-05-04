@@ -3,6 +3,7 @@
 import random
 import string
 import folium
+import os
 
 
 class Map(folium.Map):
