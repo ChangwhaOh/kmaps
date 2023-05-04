@@ -6,6 +6,7 @@ import ipyleaflet
 import ipywidgets as widgets
 import os
 
+import xyzservices.providers as xyz
 
 class Map(ipyleaflet.Map):
     """Class 'Map'
@@ -82,7 +83,7 @@ class Map(ipyleaflet.Map):
         
         widgets.link((self, 'center'), (states_dropdown, 'value'))
 
-
+    '''
     def add_base_dropdown(self, position = 'bottomright', **kwargs):
         """Add a dropdown widget to select a basemap.
 
@@ -104,6 +105,67 @@ class Map(ipyleaflet.Map):
         base_dropdown.observe(change_basemap, 'value')
 
         self.add(basemap_ctrl)
+    '''
+
+    def add_base_dropdown(self, **kwargs):
+        """Add a dropdown ipywidget that provides options for a basemap from xyz.services
+
+        Args:
+            self: basal_and_bark map: Map the user wants to add the interactive basemap to.
+
+        Returns:
+            basal_and_bark map: basal_and_bark map with new basemap, function is observing for change in value
+        """        
+        output_widget = widgets.Output(layout={'border': '1px solid black'})
+        output_widget.clear_output()
+        basemap_ctrl = ipyleaflet.WidgetControl(widget=output_widget, position='bottomright')
+        self.add_control(basemap_ctrl)
+
+        dropdown = widgets.Dropdown(
+            options = ["Topo", "ShadeRelief", "Gray"], 
+            value=None,
+            description='Basemap',
+            )
+
+        close_button = widgets.ToggleButton(
+            value=True,
+            tooltip="Open or close basemap selector",
+            icon="desktop",
+            button_style="primary",
+            #layout=widgets.Layout(height="28px", width="28px", padding=padding),
+        )
+        close_button
+        
+        h = widgets.VBox([close_button, dropdown])
+
+
+        with output_widget:
+            # if basemap_ctrl not in leaflet_map.controls:
+            display(h)
+
+        def change_basemap(change):
+            if change["new"] == "Topo":
+                self.add_basemap(basemap= "Esri.WorldTopoMap")
+            if change["new"] == "ShadeRelief":
+                self.add_basemap(basemap= "Esri.WorldShadedRelief")
+            if change["new"] == "Gray":
+                self.add_basemap(basemap= "Esri.WorldGrayCanvas")
+
+        dropdown.observe(change_basemap, "value")
+
+        def close_basemap(change):
+            if change["new"] == True:
+                output_widget.clear_output()
+                with output_widget:
+                    # if basemap_ctrl not in leaflet_map.controls:
+                    display(h)
+            else:
+                output_widget.clear_output()
+                with output_widget:
+                    # if basemap_ctrl not in leaflet_map.controls:
+                    display(close_button)
+
+        close_button.observe(close_basemap, "value")
 
 
 
@@ -156,7 +218,7 @@ class Map(ipyleaflet.Map):
         )
         self.add_layer(tile_layer)
     
-
+    '''
     def add_basemap(self, basemap, **kwargs):
         """Add a base map to the map.
 
@@ -183,6 +245,31 @@ class Map(ipyleaflet.Map):
                 self.add_tile_layer(url, name = basemap, attribution = attribution, **kwargs)
             except:
                 raise ValueError(f'{basemap} is not found')
+    '''
+
+    def add_basemap(self, url = xyz.Esri.WorldImagery.build_url(), basemap="Esri.WorldImagery", **kwargs):
+        """Add a basemap from xyz.services
+
+        Args:
+            url (string, optional: URL to xyz.services map. Defaults to xyz.Esri.WorldImagery.build_url().
+            basemap (str, optional): Name of the basemap on xyz.services. Defaults to "Esri.WorldImagery".
+
+        Raises:
+            ValueError: If basemap does not exist.
+
+        Returns:
+            basal_and_bark map: basal_and_bark map with new basemap
+        """        
+        try:
+            basemap = eval(f"xyz.{basemap}")
+            url = basemap.build_url()
+            attribution = basemap.attribution
+            b = self.add_tile_layer(url, name = basemap.name, attribution=attribution, **kwargs)
+            return b
+
+        except:
+            raise ValueError(f"Basemap '{basemap}' not found.")
+
 
 
     def add_geojson(self, data, name = 'GeoJSON', **kwargs):

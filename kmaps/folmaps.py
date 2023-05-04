@@ -5,7 +5,6 @@ import string
 import folium
 import os
 
-
 class Map(folium.Map):
     """Class 'Map'.
 
@@ -22,6 +21,15 @@ class Map(folium.Map):
         if 'scroll_wheel_zoom' not in kwargs:
             kwargs['scroll_wheel_zoom'] = True
         super().__init__(location = location, zoom_start = zoom_start, **kwargs) # inherited from the parent, in this case, ipyleaflet
+
+
+    def add_layer(self, layer):
+        """Adds a layer to the map.
+
+        Args:
+            layer (TileLayer): A TileLayer instance.
+        """
+        layer.add_to(self)
 
 
     def add_layer_control(self, **kwargs):
@@ -70,8 +78,7 @@ class Map(folium.Map):
         self.add_child(tile_layer)
 
 
-
-    def add_basemap(self, basemap, **kwargs):
+    def add_basemap(self, basemap = 'roadmap', **kwargs):
         """Add a base map to the map.
 
         Args:
@@ -97,7 +104,6 @@ class Map(folium.Map):
                 self.add_tile_layer(url, name = basemap, attr = attribution, **kwargs)
             except:
                 raise ValueError(f'{basemap} is not found')
-
 
 
     def to_streamlit(
