@@ -67,6 +67,7 @@ class Map(folium.Map):
         )
 
         self.add_child(tile_layer)
+        
 
 
     def add_basemap(self, basemap, **kwargs):
