@@ -126,7 +126,7 @@ class Map(folium.Map):
 
         try:
             import streamlit.components.v1 as components
-
+            
             if add_layer_control:
                 self.add_layer_control()
 
@@ -163,9 +163,6 @@ class Map(folium.Map):
         Returns:
             str: A string containing the HTML code.
         """
-
-        if self.options["layersControl"]:
-            self.add_layer_control()
 
         if outfile is not None:
             if not outfile.endswith(".html"):
