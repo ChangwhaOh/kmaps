@@ -35,7 +35,7 @@ class Map(folium.Map):
     def add_layer_control(self, **kwargs):
         """Add a layer control panel to the map.
         """        
-        folium.LayerControl(**kwargs).add_to(self)
+        folium.LayerControl().add_to(self)
 
 
     def add_geojson(self, data, name = 'GeoJSON', **kwargs):
