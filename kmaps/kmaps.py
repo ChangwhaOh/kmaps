@@ -287,7 +287,7 @@ class Map(ipyleaflet.Map):
         geojson = ipyleaflet.GeoJSON(data = data, name = name, **kwargs)
         self.add_layer(geojson)
     
-    def add_shp(self, data, name = 'Shapefile', **kwargs):
+    def add_shp(self, data, name = 'Shapefile', fit_bounds = True,  **kwargs):
         """Add a ESRI shape file to the map.
 
         Args:
@@ -296,8 +296,49 @@ class Map(ipyleaflet.Map):
         """
         import geopandas as gpd
         gdf = gpd.read_file(data)
+
+        # Access the geometry column
+        geometry = gdf.geometry
+
+        # Extract x and y coordinates
+        x_coords = geometry.x
+        y_coords = geometry.y
+
         geojson = gdf.__geo_interface__
         self.add_geojson(geojson, name = name, **kwargs)
+
+        # [[south, west], [north, east]]
+        if fit_bounds:
+            bbox = [[min(y_coords), min(x_coords)], [max(y_coords), max(x_coords)]]
+            self.fit_bounds(bbox)
+
+
+    def add_Weber(self, data, attribute, name = 'WeberPoint',  **kwargs):
+        import geopandas as gpd
+        gdf = gpd.read_file(data)
+        r = weber(gdf, attribute)
+
+        geojson = r.__geo_interface__
+        self.add_geojson(geojson, name = name, **kwargs)
+
+
+
+
+    def add_cmark(self, location, **kwargs):
+        """_summary_
+
+        Args:
+            location (Tuple): _description_
+        """        
+        circle_marker = ipyleaflet.CircleMarker()
+        circle_marker.location = location
+        circle_marker.radius = 3
+        circle_marker.color = "red"
+        circle_marker.fill_color = "red"
+
+        self.add_layer(circle_marker)
+
+
 
     def add_raster(self, url, name = 'Raster', fit_bounds = True, **kwargs):
         """Add a raster file to the map.
@@ -504,7 +545,107 @@ class Map(ipyleaflet.Map):
 
         except Exception as e:
             raise Exception(e)
+
+
+
+def weber(gdf, attribute):
+    """Solve the single-facility Weber problem using a gradient descent algorithm.
+
+    Args:
+        gdf (GeoDataFrame): _description_
+        attribute (String): _description_
+
+    Returns:
+        GeoDataFrame: _description_
+    """    
+    import geopandas as gpd
+    import pandas as pd
+    import numpy as np
+
+    geometry = gdf.geometry
+    x_coords = geometry.x
+    y_coords = geometry.y
+
+    w = np.array(gdf[attribute])
+    xi = np.array(x_coords)
+    yi = np.array(y_coords)
+
+    # gradient descent for each decision var.s
+    def gradX(X, Y, Z, w, xi, yi):
+        gradXls = []
+        for j in range(0, len(Z)):
+            gradXj = 0
+            for i in range(0, len(w)):
+                gradXj = gradXj + Z[j][i] * w[i] * (X[j] - xi[i]) / (np.sqrt(np.power(xi[i] - X[j], 2) + np.power(yi[i] - Y[j], 2)))
+            gradXls.append(gradXj)
+        gradXj = 0
+        for i in range(0, len(w)):
+            gradXj = gradXj + w[i] * (X[-1] - xi[i]) / (np.sqrt(np.power(xi[i] - X[-1], 2) + np.power(yi[i] - Y[-1], 2)))
+            for j in range(0, len(Z)):
+                gradXj = gradXj - Z[j][i] * w[i] * (X[-1] - xi[i]) / (np.sqrt(np.power(xi[i] - X[-1], 2) + np.power(yi[i] - Y[-1], 2)))
+        gradXls.append(gradXj)
+        return np.array(gradXls)
+
+    def gradY(X, Y, Z, w, xi, yi):
+        gradYls = []
+        for j in range(0, len(Z)):
+            gradYj = 0
+            for i in range(0, len(w)):
+                gradYj = gradYj + Z[j][i] * w[i] * (Y[j] - yi[i]) / (np.sqrt(np.power(xi[i] - X[j], 2) + np.power(yi[i] - Y[j], 2)))
+            gradYls.append(gradYj)
+        gradYj = 0
+        for i in range(0, len(w)):
+            gradYj = gradYj + w[i] * (Y[-1] - yi[i]) / (np.sqrt(np.power(xi[i] - X[-1], 2) + np.power(yi[i] - Y[-1], 2)))
+            for j in range(0, len(Z)):
+                gradYj = gradYj - Z[j][i] * w[i] * (Y[-1] - yi[i]) / (np.sqrt(np.power(xi[i] - X[-1], 2) + np.power(yi[i] - Y[-1], 2)))
+        gradYls.append(gradYj)
+        return np.array(gradYls)
+
+    def gradZ(X, Y, Z, w, xi, yi):
+        gradZls = []
+        for j in range(0, len(Z)):
+            gradZtemp = []
+            for i in range(0, len(w)):
+                gradZi = w[i] * (np.sqrt(np.power(xi[i] - X[j], 2) + np.power(yi[i] - Y[j], 2))) - w[i] * (np.sqrt(np.power(xi[i] - X[-1], 2) + np.power(yi[i] - Y[-1], 2)))
+                gradZtemp.append(gradZi)
+            gradZls.append(gradZtemp)
+        return np.array(gradZls)
+
+    # define objective function for the GD
+    def obj(X, Y, Z, w, xi, yi):
+        objective = 0
+        for i in range(0, len(w)):
+            for j in range(0, len(Z)):
+                objective = objective + Z[j][i] * w[i] * (np.sqrt(np.power(xi[i] - X[j], 2) + np.power(yi[i] - Y[j], 2)))
+                objective = objective - Z[j][i] * w[i] * (np.sqrt(np.power(xi[i] - X[-1], 2) + np.power(yi[i] - Y[-1], 2)))
+            objective = objective + w[i] * (np.sqrt(np.power(xi[i] - X[-1], 2) + np.power(yi[i] - Y[-1], 2)))
+        return objective
+
+    # initial variables
+    Xg = np.array([sum(xi) / len(xi)])
+    Yg = np.array([sum(yi) / len(yi)])
+    Zg = []
+    for j in range(0, 0):
+        Zg.append(np.array([0.5] * len(w)))
+    Zg = np.array(Zg)
+
+    # gradient descent
+    max_iter = 500
+    step_size = 0.000001
+    obj_val_ls = []
+
+    for t in range(max_iter):
+        obj_val = obj(Xg, Yg, Zg, w, xi, yi)
+        obj_val_ls.append(obj_val)
+        
+        Xg = Xg - step_size * gradX(Xg, Yg, Zg, w, xi, yi)
+        Yg = Yg - step_size * gradY(Xg, Yg, Zg, w, xi, yi)
     
+    r = gpd.GeoDataFrame(geometry = gpd.points_from_xy(x = Xg, y = Yg))
+    r['ObjVal'] = obj_val
+
+    return r
+
 
 
 def generate_random_string(length, upper = False, digit = False, punc = False):
