@@ -6,7 +6,7 @@ import ipyleaflet
 import ipywidgets as widgets
 import pandas as pd
 import geopandas as gpd
-import spopt
+#import spopt
 import os
 
 from spopt.locate import PMedian, simulated_geo_points
