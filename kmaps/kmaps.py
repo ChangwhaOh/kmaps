@@ -9,7 +9,7 @@ import geopandas as gpd
 #import spopt
 import os
 
-from spopt.locate import PMedian, simulated_geo_points
+#from spopt.locate import PMedian, simulated_geo_points
 
 import xyzservices.providers as xyz
 
