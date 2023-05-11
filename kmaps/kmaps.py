@@ -578,18 +578,27 @@ class Map(ipyleaflet.Map):
         output_widget = widgets.Output(layout={'border': '1px solid black'})
         output_widget.clear_output()
         selection = ipyfilechooser.FileChooser(path)
-        select_control = ipyleaflet.WidgetControl(widget = selection, position = position)
-        self.add(select_control)
+      
+        button = widgets.ToggleButton(
+            value=False,
+            tooltip="Apply",
+            icon="wrench"
+        )
 
+        v = widgets.VBox([button, selection])
 
-        def addcsv(change):
+        control = ipyleaflet.WidgetControl(widget = v, position = 'bottomright')
+        self.add(control)
+
+        def button_click(change):
             if change["new"]:
-                try:
+                try: 
                     self.add_points_from_csv(selection.selected)
                 except Exception as e:
                     raise Exception(e)
+                
+        button.observe(button_click, "value")
 
-        selection.observe(addcsv, "value")
 
 
 

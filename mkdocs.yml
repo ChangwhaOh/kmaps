@@ -49,6 +49,7 @@ nav:
     - Changelog: changelog.md
     - Report Issues: https://github.com/ChangwhaOh/kmaps/issues
     - Examples:
+          - FinalExam: examples/10_final_exam.ipynb
           - Introduction: examples/00_introduction.ipynb
           - Folmaps: examples/01_folmaps.ipynb
           - Raster: examples/02_raster.ipynb
