@@ -4,7 +4,12 @@ import random
 import string
 import ipyleaflet
 import ipywidgets as widgets
+import pandas as pd
+import geopandas as gpd
+import spopt
 import os
+
+from spopt.locate import PMedian, simulated_geo_points
 
 import xyzservices.providers as xyz
 
@@ -322,8 +327,6 @@ class Map(ipyleaflet.Map):
         self.add_geojson(geojson, name = name, **kwargs)
 
 
-
-
     def add_cmark(self, location, **kwargs):
         """_summary_
 
@@ -337,6 +340,10 @@ class Map(ipyleaflet.Map):
         circle_marker.fill_color = "red"
 
         self.add_layer(circle_marker)
+
+
+    def add_pmedian():
+        print('')
 
 
 
@@ -545,6 +552,66 @@ class Map(ipyleaflet.Map):
 
         except Exception as e:
             raise Exception(e)
+
+    # final exam Q2
+    def add_points_from_csv(self, in_csv, x="longitude", y="latitude", label=None, layer_name="Marker cluster"):
+        df = pd.read_csv(in_csv)
+
+        Xls = df[x]
+        Yls = df[y]
+
+        ls = []
+        for i in range(len(df)):
+            marker = ipyleaflet.Marker(location = (Yls[i], Xls[i]))
+            ls.append(marker)
+        
+        marker_cluster = ipyleaflet.MarkerCluster(markers = ls)
+        self.add_layer(marker_cluster)
+
+
+
+    # final exam Q3
+    def add_select_mc(self, position = 'bottomright', **kwargs):
+        import ipyfilechooser
+        import os
+        path = os.getcwd()
+        output_widget = widgets.Output(layout={'border': '1px solid black'})
+        output_widget.clear_output()
+        selection = ipyfilechooser.FileChooser(path)
+        select_control = ipyleaflet.WidgetControl(widget = selection, position = position)
+        self.add(select_control)
+
+
+        def addcsv(change):
+            if change["new"]:
+                try:
+                    self.add_points_from_csv(selection.selected)
+                except Exception as e:
+                    raise Exception(e)
+
+        selection.observe(addcsv, "value")
+
+
+
+# final exam Q1
+def csv_to_shp(in_csv, out_shp, x="longitude", y="latitude"):
+    df = pd.read_csv(in_csv)
+    
+    Xls = df[x]
+    Yls = df[y]
+    gdf = gpd.GeoDataFrame(geometry = gpd.points_from_xy(Xls, Yls))
+    gdf.to_file(out_shp)
+    
+def csv_to_geojson(in_csv, out_geojson, x="longitude", y="latitude"):
+    df = pd.read_csv(in_csv)
+    
+    Xls = df[x]
+    Yls = df[y]
+    gdf = gpd.GeoDataFrame(geometry = gpd.points_from_xy(Xls, Yls))
+    geojson = gdf.__geo_interface__
+    gdf.to_file(out_geojson)
+
+
 
 
 

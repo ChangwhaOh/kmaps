@@ -1,5 +1,6 @@
 folium
 ipyleaflet
 ipywidgets
+ipyfilechooser
 geopandas
 httpx
