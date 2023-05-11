@@ -585,7 +585,7 @@ class Map(ipyleaflet.Map):
             icon="wrench"
         )
 
-        v = widgets.VBox([button, selection])
+        v = widgets.VBox([selection, button])
 
         control = ipyleaflet.WidgetControl(widget = v, position = 'bottomright')
         self.add(control)
