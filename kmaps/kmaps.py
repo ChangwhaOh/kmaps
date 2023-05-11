@@ -603,20 +603,30 @@ class Map(ipyleaflet.Map):
 
 
 # final exam Q1
-def csv_to_shp(in_csv, out_shp, x="longitude", y="latitude"):
+def csv_to_shp(in_csv, out_shp, x="longitude", y="latitude", attribute = None):
     df = pd.read_csv(in_csv)
     
     Xls = df[x]
     Yls = df[y]
-    gdf = gpd.GeoDataFrame(geometry = gpd.points_from_xy(Xls, Yls))
+    if attribute != None:
+        att_ls = df[attribute]
+        df_dict = {'Attribute': att_ls, 'XCoord': Xls, 'YCoord': Yls}
+        gdf = gpd.GeoDataFrame(pd.DataFrame(df_dict), geometry = gpd.points_from_xy(Xls, Yls))
+    else:
+        gdf = gpd.GeoDataFrame(geometry = gpd.points_from_xy(Xls, Yls))
     gdf.to_file(out_shp)
     
-def csv_to_geojson(in_csv, out_geojson, x="longitude", y="latitude"):
+def csv_to_geojson(in_csv, out_geojson, x="longitude", y="latitude", attribute = None):
     df = pd.read_csv(in_csv)
     
     Xls = df[x]
     Yls = df[y]
-    gdf = gpd.GeoDataFrame(geometry = gpd.points_from_xy(Xls, Yls))
+    if attribute != None:
+        att_ls = df[attribute]
+        df_dict = {'Attribute': att_ls, 'XCoord': Xls, 'YCoord': Yls}
+        gdf = gpd.GeoDataFrame(pd.DataFrame(df_dict), geometry = gpd.points_from_xy(Xls, Yls))
+    else:
+        gdf = gpd.GeoDataFrame(geometry = gpd.points_from_xy(Xls, Yls))
     geojson = gdf.__geo_interface__
     gdf.to_file(out_geojson)
 
