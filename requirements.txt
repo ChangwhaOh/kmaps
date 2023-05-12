@@ -3,4 +3,5 @@ ipyleaflet
 ipywidgets
 ipyfilechooser
 geopandas
+spopt
 httpx

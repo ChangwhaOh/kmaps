@@ -15,9 +15,6 @@ import xyzservices.providers as xyz
 
 class Map(ipyleaflet.Map):
     """Class 'Map'
-
-    Args:
-        ipyleaflet (_type_): _description_
     """
     def __init__(self, center = [37.5, 127], zoom = 8, **kwargs):
         """Create a Map.
@@ -39,9 +36,6 @@ class Map(ipyleaflet.Map):
         #self.add_states_dropdown()
         self.add_search_control()
 
-
-    
-    #['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California']
 
     def add_states_dropdown(self, position = 'bottomright', **kwargs):
         """Add a dropdown widget to move to selected state to the map.
@@ -88,38 +82,9 @@ class Map(ipyleaflet.Map):
         
         widgets.link((self, 'center'), (states_dropdown, 'value'))
 
-    '''
-    def add_base_dropdown(self, position = 'bottomright', **kwargs):
-        """Add a dropdown widget to select a basemap.
-
-        Args:
-            position (str, optional): Position of the widget. Defaults to 'bottomright'.
-        """        
-        base_dropdown = widgets.Dropdown(
-            options = ['Satellite', 'Roadmap'],
-            value = None,
-            description = 'Basemap',
-        )
-
-        basemap_ctrl = ipyleaflet.WidgetControl(widget = base_dropdown, position = position)
-
-        def change_basemap(change):
-            if change['new']:
-                self.add_basemap(base_dropdown.value)
-        
-        base_dropdown.observe(change_basemap, 'value')
-
-        self.add(basemap_ctrl)
-    '''
 
     def add_base_dropdown(self, **kwargs):
-        """Add a dropdown ipywidget that provides options for a basemap from xyz.services
-
-        Args:
-            self: basal_and_bark map: Map the user wants to add the interactive basemap to.
-
-        Returns:
-            basal_and_bark map: basal_and_bark map with new basemap, function is observing for change in value
+        """Add a dropdown ipywidget that provides options for a basemap from xyz.services.
         """        
         output_widget = widgets.Output(layout={'border': '1px solid black'})
         output_widget.clear_output()
@@ -142,7 +107,6 @@ class Map(ipyleaflet.Map):
         close_button
         
         h = widgets.VBox([close_button, dropdown])
-
 
         with output_widget:
             # if basemap_ctrl not in leaflet_map.controls:
@@ -171,7 +135,6 @@ class Map(ipyleaflet.Map):
                     display(close_button)
 
         close_button.observe(close_basemap, "value")
-
 
 
     def add_search_control(self, position = 'topleft', **kwargs):
@@ -223,34 +186,6 @@ class Map(ipyleaflet.Map):
         )
         self.add_layer(tile_layer)
     
-    '''
-    def add_basemap(self, basemap, **kwargs):
-        """Add a base map to the map.
-
-        Args:
-            basemap (str): xyz url of the base map.
-
-        Raises:
-            ValueError: Error message will be raised if the url is not available.
-        """
-        
-        import xyzservices.providers as xyz
-
-        if basemap.lower() == 'roadmap':
-            url = 'http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}'
-            self.add_tile_layer(url, name = basemap, **kwargs)
-        elif basemap.lower() == 'satellite':
-            url = 'http://mt0.google.com/vt/lyrs=y&hl=en&x={x}&y={y}&z={z}'
-            self.add_tile_layer(url, name = basemap, **kwargs)
-        else:
-            try:
-                basemap = eval(f'xyz.{basemap}')
-                url = basemap.build_url()
-                attribution = basemap.attribution
-                self.add_tile_layer(url, name = basemap, attribution = attribution, **kwargs)
-            except:
-                raise ValueError(f'{basemap} is not found')
-    '''
 
     def add_basemap(self, url = xyz.Esri.WorldImagery.build_url(), basemap="Esri.WorldImagery", **kwargs):
         """Add a basemap from xyz.services
@@ -261,9 +196,6 @@ class Map(ipyleaflet.Map):
 
         Raises:
             ValueError: If basemap does not exist.
-
-        Returns:
-            basal_and_bark map: basal_and_bark map with new basemap
         """        
         try:
             basemap = eval(f"xyz.{basemap}")
@@ -274,7 +206,6 @@ class Map(ipyleaflet.Map):
 
         except:
             raise ValueError(f"Basemap '{basemap}' not found.")
-
 
 
     def add_geojson(self, data, name = 'GeoJSON', **kwargs):
@@ -292,6 +223,7 @@ class Map(ipyleaflet.Map):
         geojson = ipyleaflet.GeoJSON(data = data, name = name, **kwargs)
         self.add_layer(geojson)
     
+
     def add_shp(self, data, name = 'Shapefile', fit_bounds = True,  **kwargs):
         """Add a ESRI shape file to the map.
 
@@ -319,6 +251,13 @@ class Map(ipyleaflet.Map):
 
 
     def add_Weber(self, data, attribute, name = 'WeberPoint',  **kwargs):
+        """Add the optimal location of the single-facility Weber problem on the map with the input shapefile.
+
+        Args:
+            data (GeoDataFrame): A geopandas GeoDataFrame. Must be a point file.
+            attribute (str): A column name of the GeoDataFrame that contains the weight attribute 
+            name (str, optional): A name of the weber ooint layer. Defaults to 'WeberPoint'.
+        """        
         import geopandas as gpd
         gdf = gpd.read_file(data)
         r = weber(gdf, attribute)
@@ -328,10 +267,10 @@ class Map(ipyleaflet.Map):
 
 
     def add_cmark(self, location, **kwargs):
-        """_summary_
+        """Add a circle marker to the map.
 
         Args:
-            location (Tuple): _description_
+            location (tuple): XY coordinate of the marker.
         """        
         circle_marker = ipyleaflet.CircleMarker()
         circle_marker.location = location
@@ -385,13 +324,6 @@ class Map(ipyleaflet.Map):
             bbox = [[bounds[1], bounds[0]], [bounds[3], bounds[2]]]
             self.fit_bounds(bbox)
         
-    def add_local_raster(self, filename, name = 'local raster', **kwargs):
-        try:
-            import localtileserver
-        except ImportError:
-            raise ImportError('')
-    
-
 
     def add_vector(
         self,
@@ -399,6 +331,12 @@ class Map(ipyleaflet.Map):
         layer_name = 'Vector data',
         **kwargs,
     ):
+        """Add a vector layer to the map
+
+        Args:
+            filename (str): The name of the vector file.
+            layer_name (str, optional): A layer name to be shown on the map. Defaults to 'Vector data'.
+        """    
         import os
         if not filename.startswith('http'):
             filename = os.path.abspath(filename)
@@ -429,7 +367,8 @@ class Map(ipyleaflet.Map):
                 geojson,
                 layer_name
             )
-    
+
+
     def add_image(self, url, width, height, position = 'bottomright'):
         """Add an image file to the map.
 
@@ -445,8 +384,6 @@ class Map(ipyleaflet.Map):
         widget = widgets.HTML(value = f'<img src="{url}" width = "{width}" height = "{height}">')
         control = WidgetControl(widget = widget, position = position)
         self.add(control)
-
-
 
 
     def to_streamlit(self, width=None, height=600, scrolling=False, **kwargs):
@@ -477,6 +414,7 @@ class Map(ipyleaflet.Map):
 
         except Exception as e:
             raise Exception(e)
+
 
     def to_html(
         self,
@@ -554,7 +492,15 @@ class Map(ipyleaflet.Map):
             raise Exception(e)
 
     # final exam Q2
-    def add_points_from_csv(self, in_csv, x="longitude", y="latitude", label=None, layer_name="Marker cluster"):
+    def add_points_from_csv(self, in_csv, x="longitude", y="latitude", layer_name="Marker cluster"):
+        """Add point marker cluster to the map.
+
+        Args:
+            in_csv (str): csv file name
+            x (str, optional): The column name that contains X coordinates. Defaults to "longitude".
+            y (str, optional): The column name that contains Y coordinates. Defaults to "latitude".
+            layer_name (str, optional): A layer name. Defaults to "Marker cluster".
+        """        
         df = pd.read_csv(in_csv)
 
         Xls = df[x]
@@ -569,7 +515,7 @@ class Map(ipyleaflet.Map):
         self.add_layer(marker_cluster)
 
 
-
+    '''
     # final exam Q3
     def add_select_mc(self, position = 'bottomright', **kwargs):
         import ipyfilechooser
@@ -598,12 +544,20 @@ class Map(ipyleaflet.Map):
                     raise Exception(e)
                 
         button.observe(button_click, "value")
-
-
+    '''
 
 
 # final exam Q1
 def csv_to_shp(in_csv, out_shp, x="longitude", y="latitude", attribute = None):
+    """Convert csv that contains longitude and latitude columns to a shapefile.
+
+    Args:
+        in_csv (str): csv file name
+        out_shp (str): name of output file
+        x (str, optional): The column name that contains X coordinates. Defaults to "longitude".
+        y (str, optional): The column name that contains Y coordinates. Defaults to "latitude".
+        attribute (str, optional): The column name that contains attribute. Defaults to None.
+    """    
     df = pd.read_csv(in_csv)
     
     Xls = df[x]
@@ -617,6 +571,15 @@ def csv_to_shp(in_csv, out_shp, x="longitude", y="latitude", attribute = None):
     gdf.to_file(out_shp)
     
 def csv_to_geojson(in_csv, out_geojson, x="longitude", y="latitude", attribute = None):
+    """Convert csv that contains longitude and latitude columns to a geojson file.
+
+    Args:
+        in_csv (str): csv file name
+        out_geojson (str): name of output file
+        x (str, optional): The column name that contains X coordinates. Defaults to "longitude".
+        y (str, optional): The column name that contains Y coordinates. Defaults to "latitude".
+        attribute (str, optional): The column name that contains attribute. Defaults to None.
+    """  
     df = pd.read_csv(in_csv)
     
     Xls = df[x]
@@ -634,15 +597,34 @@ def csv_to_geojson(in_csv, out_geojson, x="longitude", y="latitude", attribute =
 
 
 
+
+def distance_matrix(df):
+    """Create an Euclidean distance matrix from a point shapefile.
+
+    Args:
+        df (GeoDataFrame): Input GDF file.
+
+    Returns:
+        numpy array: Created distance matrix.
+    """
+    mat = []
+    for i in list(df.index):
+        temp_ls = list(df['geometry'].distance(df['geometry'][i]))
+        mat.append(temp_ls)
+    mat = np.array(mat)
+    mat = mat
+    
+    return mat
+
+
 def weber(gdf, attribute):
     """Solve the single-facility Weber problem using a gradient descent algorithm.
 
     Args:
-        gdf (GeoDataFrame): _description_
-        attribute (String): _description_
-
+        gdf (GeoDataFrame): Input GDF file.
+        attribute (str): Column name that contains the weight.
     Returns:
-        GeoDataFrame: _description_
+        GeoDataFrame: Result of the Weber problem.
     """    
     import geopandas as gpd
     import pandas as pd
