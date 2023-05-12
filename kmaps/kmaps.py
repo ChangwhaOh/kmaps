@@ -594,10 +594,6 @@ def csv_to_geojson(in_csv, out_geojson, x="longitude", y="latitude", attribute =
     gdf.to_file(out_geojson)
 
 
-
-
-
-
 def distance_matrix(df):
     """Create an Euclidean distance matrix from a point shapefile.
 
@@ -607,6 +603,7 @@ def distance_matrix(df):
     Returns:
         numpy array: Created distance matrix.
     """
+    import numpy as np
     mat = []
     for i in list(df.index):
         temp_ls = list(df['geometry'].distance(df['geometry'][i]))

@@ -5,7 +5,7 @@
 [![image](https://img.shields.io/conda/vn/conda-forge/kmaps.svg)](https://anaconda.org/conda-forge/kmaps)
 
 
-**TBA**
+**kmaps is a python package for solving the facility location problems and displaying the results on the web map**
 
 
 -   Free software: MIT license
